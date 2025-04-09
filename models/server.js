@@ -3,6 +3,8 @@ const cors = require('cors')
 
 const { bdmysql } = require('../database/MySqlConnection');
 
+const { dbConnectionMongo } = require('../database/MongoConnection');
+
 
 class Server {
 
@@ -15,9 +17,16 @@ class Server {
             //auth: '/api/auth',
             heroes: '/api/heroes',
             peliculas: '/api/peliculas',
-            protagonistas: '/api/protagonistas'
         }
             
+        this.pathsMongo = {
+
+            //Ajusto la url para la outorizacion por login
+            auth: '/api/auth',
+            usuarios: '/api/usuarios',
+            heroes: '/api/heroes',
+        }
+
 
         /*
         this.app.get('/', function (req, res) {
@@ -28,6 +37,9 @@ class Server {
 
         //Aqui me conecto a la BD
         this.dbConnection();
+
+        //Aqui me conecto a MongoDB
+        this.conectarBDMongo();
 
 
         //Middlewares
@@ -50,6 +62,9 @@ class Server {
         }
     }
     
+    async conectarBDMongo(){
+        await dbConnectionMongo();
+    }
 
     
     routes() {
@@ -100,14 +115,12 @@ class Server {
         */
                    
         //this.app.use(this.pathsMySql.auth, require('../routes/MySqlAuth'));
-        this.app.use(this.pathsMySql.heroes, require('../routes/heroes.route'));
-        this.app.use(this.pathsMySql.peliculas, require('../routes/peliculas.route'));
-        this.app.use(this.pathsMySql.protagonistas, require('../routes/protagonistas.route'));
+        this.app.use(this.pathsMySql.heroes, require('../routes/mongoHeroe.route'));
+        this.app.use(this.pathsMongo.usuarios, require('../routes/mongoUsuario.route'));
 
-
-        //this.app.use(this.pathsMySql.peliculas, require('../routes/peliculas.route'));
+        //Activo la ruta del login
+        this.app.use(this.pathsMongo.auth, require('../routes/auth.route'));
         
-
     }
     
 
