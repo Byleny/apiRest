@@ -25,8 +25,8 @@ const HeroeSchema = Schema({
   },
   casa: {
     type: String,
-    enum: ['ADMIN_ROLE', 'USER_ROLE', 'INVITED_ROLE'],
-    required: [true, 'La casa (rol) es obligatoria']
+    required: [true, 'La casa es obligatoria'],
+    enum: ['Marvel', 'DC']
   },
   fecha_creacion: {
     type: Date,
